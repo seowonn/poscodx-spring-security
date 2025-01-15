@@ -10,5 +10,9 @@
     </parent>
 
     <artifactId>filter-proxy</artifactId>
-
+	<packaging>war</packaging>
+	
+	<build>
+		<finalName>filter-proxy</finalName>
+	</build>
 </project>
