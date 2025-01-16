@@ -19,7 +19,7 @@ import filter.SecurityFilterEx04;
 public class SecurityConfigEx02 {
 
 	@Bean
-	public FilterChainProxy securityFilterChainProxy() {
+	public FilterChainProxy springSecurityFilterChain() {
 		List<SecurityFilterChain> securityFilterChains = Arrays.asList(
 				new DefaultSecurityFilterChain(new AntPathRequestMatcher("/hello/**"),
 						securityFilterEx01(), securityFilterEx02()),

@@ -20,7 +20,7 @@ import org.springframework.util.AntPathMatcher;
 public class SecurityConfigEx01 {
 
 	@Bean
-	public FilterChainProxy springSecurityFilterChainProxy() {
+	public FilterChainProxy springSecurityFilterChain() {
 		List<SecurityFilterChain> securityFilterChains = Arrays
 				.asList(new SecurityFilterChain() {
 

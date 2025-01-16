@@ -1,8 +1,4 @@
-package config.web;
-
-import config.WebConfig;
-import config.app.SecurityConfigEx02;
-import jakarta.servlet.Filter;
+package config.app;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -15,6 +11,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.ContextConfiguration;
@@ -25,29 +22,33 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes={WebConfig.class, SecurityConfigEx02.class})
-@WebAppConfiguration
-public class SecurityConfigEx02Test {
-    private MockMvc mvc;
-    private FilterChainProxy filterChainProxy;
+import config.WebConfig;
+import jakarta.servlet.http.HttpServletResponse;
 
-    @BeforeEach
-    public void setup(WebApplicationContext context) {
-        filterChainProxy = (FilterChainProxy)context.getBean("springSecurityFilterChain", Filter.class);
-        mvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .addFilter(new DelegatingFilterProxy(filterChainProxy), "/*")
-                .build();
-    }
-    
-    @Test
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = { WebConfig.class, SecurityConfigEx03.class })
+@WebAppConfiguration
+public class SecurityConfigEx03Test {
+	private MockMvc mvc;
+	private FilterChainProxy filterChainProxy;
+	@Autowired
+	private HttpServletResponse httpServletResponse;
+
+	@BeforeEach
+	public void setup(WebApplicationContext applicationContext) {
+		filterChainProxy = applicationContext.getBean("springSecurityFilterChain",
+				FilterChainProxy.class);
+		mvc = MockMvcBuilders.webAppContextSetup(applicationContext)
+				.addFilter(new DelegatingFilterProxy(filterChainProxy), "/*").build();
+	}
+
+	@Test
 	public void testSecurityFilterChains() {
 		List<SecurityFilterChain> securityFilterChains = filterChainProxy
 				.getFilterChains();
 		assertEquals(2, securityFilterChains.size());
 	}
-	
+
 	@Test
 	public void testSecurityFilterChain01() {
 		SecurityFilterChain securityFilterChain = filterChainProxy.getFilterChains()
@@ -59,13 +60,7 @@ public class SecurityConfigEx02Test {
 	public void testSecurityFilterChain02() {
 		SecurityFilterChain securityFilterChain = filterChainProxy.getFilterChains()
 				.getLast();
-		List<Filter> filters = securityFilterChain.getFilters();
-		
-		for(Filter filter : filters) {
-			System.out.println(filter.getClass().getSimpleName());
-		}
-		
-		assertEquals(16, filters.size());
+		assertEquals(3, securityFilterChain.getFilters().size());
 	}
 
 	@Test
@@ -76,7 +71,7 @@ public class SecurityConfigEx02Test {
 
 	@Test
 	public void testHello() throws Throwable {
-		mvc.perform(get("/ping")).andExpect(status().isOk())
-				.andExpect(content().string("pong")).andDo(print());
+		mvc.perform(get("/hello")).andExpect(status().isOk())
+				.andExpect(content().string("world")).andDo(print());
 	}
 }

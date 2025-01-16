@@ -1,13 +1,9 @@
-package config.web;
-
-import config.WebConfig;
-import config.app.SecurityConfigEx02;
-import jakarta.servlet.Filter;
+package config.app;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
@@ -25,6 +21,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
+import config.WebConfig;
+
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes={WebConfig.class, SecurityConfigEx02.class})
 @WebAppConfiguration
@@ -32,51 +30,41 @@ public class SecurityConfigEx02Test {
     private MockMvc mvc;
     private FilterChainProxy filterChainProxy;
 
-    @BeforeEach
-    public void setup(WebApplicationContext context) {
-        filterChainProxy = (FilterChainProxy)context.getBean("springSecurityFilterChain", Filter.class);
-        mvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .addFilter(new DelegatingFilterProxy(filterChainProxy), "/*")
-                .build();
-    }
-    
-    @Test
+	@BeforeEach
+	public void setup(WebApplicationContext applicationContext) {
+		filterChainProxy = applicationContext.getBean("springSecurityFilterChain",
+				FilterChainProxy.class);
+		mvc = MockMvcBuilders.webAppContextSetup(applicationContext)
+				.addFilter(new DelegatingFilterProxy(filterChainProxy), "/*").build();
+	}
+
+	@Test
 	public void testSecurityFilterChains() {
 		List<SecurityFilterChain> securityFilterChains = filterChainProxy
 				.getFilterChains();
-		assertEquals(2, securityFilterChains.size());
+		assertEquals(0, securityFilterChains.size());
 	}
-	
+
 	@Test
 	public void testSecurityFilterChain01() {
 		SecurityFilterChain securityFilterChain = filterChainProxy.getFilterChains()
 				.getFirst();
-		assertEquals(0, securityFilterChain.getFilters().size());
+		assertEquals(2, securityFilterChain.getFilters().size());
 	}
 
 	@Test
 	public void testSecurityFilterChain02() {
 		SecurityFilterChain securityFilterChain = filterChainProxy.getFilterChains()
 				.getLast();
-		List<Filter> filters = securityFilterChain.getFilters();
-		
-		for(Filter filter : filters) {
-			System.out.println(filter.getClass().getSimpleName());
-		}
-		
-		assertEquals(16, filters.size());
-	}
-
-	@Test
-	public void testAssets() throws Throwable {
-		mvc.perform(get("/assets/images/logo.svg")).andExpect(status().isOk())
-				.andExpect(content().contentType("image/svg+xml")).andDo(print());
+		assertEquals(2, securityFilterChain.getFilters().size());
 	}
 
 	@Test
 	public void testHello() throws Throwable {
-		mvc.perform(get("/ping")).andExpect(status().isOk())
-				.andExpect(content().string("pong")).andDo(print());
+		mvc.perform(get("/hello")).andExpect(status().isOk())
+				.andExpect(cookie().value("SecurityFilterEx01", "Works"))
+				.andExpect(cookie().value("SecurityFilterEx02", "Works"))
+				.andDo(print());
 	}
 }
+

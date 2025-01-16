@@ -1,4 +1,4 @@
-package config.web;
+package config.app;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,6 +37,9 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+/**
+ * SpringSecurityFilterChain들 이걸 이해하고 커스텀할 수 있음
+ */
 @Configuration
 public class SecurityConfigEx00 {
     @Bean
