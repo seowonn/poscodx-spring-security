@@ -1,4 +1,4 @@
-package config.web;
+package config.app;
 
 import java.util.Arrays;
 import java.util.List;

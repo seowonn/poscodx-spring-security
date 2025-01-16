@@ -1,4 +1,4 @@
-package config.web;
+package config.app;
 
 import filter.SecurityFilterEx01;
 import filter.SecurityFilterEx02;
@@ -20,7 +20,7 @@ import org.springframework.util.AntPathMatcher;
 public class SecurityConfigEx01 {
 
 	@Bean
-	public FilterChainProxy securityFilterChainProxy() {
+	public FilterChainProxy springSecurityFilterChainProxy() {
 		List<SecurityFilterChain> securityFilterChains = Arrays
 				.asList(new SecurityFilterChain() {
 

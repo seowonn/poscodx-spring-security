@@ -1,6 +1,8 @@
 package config.web;
 
 import config.WebConfig;
+import config.app.SecurityConfigEx01;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.security.web.FilterChainProxy;

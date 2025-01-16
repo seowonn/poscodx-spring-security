@@ -1,6 +1,7 @@
 package config.web;
 
 import config.WebConfig;
+import config.app.SecurityConfigEx03;
 import jakarta.servlet.Filter;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
