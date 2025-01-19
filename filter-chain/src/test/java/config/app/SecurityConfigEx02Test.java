@@ -42,7 +42,7 @@ public class SecurityConfigEx02Test {
 	public void testSecurityFilterChains() {
 		List<SecurityFilterChain> securityFilterChains = filterChainProxy
 				.getFilterChains();
-		assertEquals(0, securityFilterChains.size());
+		assertEquals(2, securityFilterChains.size());
 	}
 
 	@Test
@@ -65,6 +65,16 @@ public class SecurityConfigEx02Test {
 				.andExpect(cookie().value("SecurityFilterEx01", "Works"))
 				.andExpect(cookie().value("SecurityFilterEx02", "Works"))
 				.andDo(print());
+	}
+	
+	@Test
+	public void testPing() throws Throwable {
+		mvc
+		.perform(get("/ping/something"))
+		.andExpect(status().isOk())
+		.andExpect(cookie().value("SecurityFilterEx03", "Works"))
+		.andExpect(cookie().value("SecurityFilterEx04", "Works"))
+		.andDo(print());
 	}
 }
 
