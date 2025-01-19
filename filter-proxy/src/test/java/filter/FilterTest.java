@@ -30,13 +30,14 @@ import jakarta.servlet.Filter;
 @WebAppConfiguration
 public class FilterTest {
 
-	// 사용자가 임의 구성하는 톰켓
+	// Spring MVC를 테스트 하기 위한 도구
 	private static MockMvc mvc;
 
-	@BeforeAll
+	@BeforeAll // 모든 메서드 실행 전 딱 한 번 호출됨
 	public static void setup(WebApplicationContext applicationContext) {
 		/**
-		 * Spring 컨테이너를 넣어 Web Application 환경을 모의 설정한다.
+		 * WebApplicationContext: Spring 테스트 환경에서 WebApplicationContext를
+		 * 모의로 생성하여 제공하는 객체
 		 */
 		Filter filter = (Filter) applicationContext.getBean("realFilter");
 		mvc = MockMvcBuilders.webAppContextSetup(applicationContext)
