@@ -19,7 +19,7 @@ public class SecurityConfigEx03 {
 	@Bean
 	public FilterChainProxy springSecurityFilterChain() {
 		List<SecurityFilterChain> securityFilterChains = Arrays.asList(
-				// 클라이언트 측에서 요청하는 경로에 대해 필터 검사 여부를 지정할 수 있음
+				// 요청 경로에 대해 필터 검사 여부를 지정할 수 있음 ("/assets/**"는 필터를 걸지 않음
 				new DefaultSecurityFilterChain(new AntPathRequestMatcher("/assets/**")),
 				new DefaultSecurityFilterChain(new AntPathRequestMatcher("/**"),
 						disableEncodeUrlFilter(), webAsyncManagerIntegrationFilter(),
