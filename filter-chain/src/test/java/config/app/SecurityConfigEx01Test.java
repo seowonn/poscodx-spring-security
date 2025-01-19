@@ -8,7 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.security.web.FilterChainProxy;
@@ -27,11 +28,11 @@ import config.WebConfig;
 @ContextConfiguration(classes = { WebConfig.class, SecurityConfigEx01.class })
 @WebAppConfiguration
 public class SecurityConfigEx01Test {
-	private MockMvc mvc;
-	private FilterChainProxy filterChainProxy;
+	private static MockMvc mvc;
+	private static FilterChainProxy filterChainProxy;
 
-	@BeforeEach
-	public void setup(WebApplicationContext applicationContext) {
+	@BeforeAll
+	public static void setup(WebApplicationContext applicationContext) {
 		filterChainProxy = applicationContext.getBean("springSecurityFilterChain",
 				FilterChainProxy.class);
 		mvc = MockMvcBuilders.webAppContextSetup(applicationContext)
@@ -39,6 +40,7 @@ public class SecurityConfigEx01Test {
 	}
 
 	@Test
+	@DisplayName("springSecurityFilterChain으로 등록한 SecurityFilterChain의 개수 확인")
 	public void testSecurityFilterChains() {
 		List<SecurityFilterChain> securityFilterChains = filterChainProxy
 				.getFilterChains();
@@ -46,6 +48,7 @@ public class SecurityConfigEx01Test {
 	}
 
 	@Test
+	@DisplayName("첫번째 SecurityFilterChain에 등록된 Filter의 개수 확인")
 	public void testSecurityFilterChain01() {
 		SecurityFilterChain securityFilterChain = filterChainProxy.getFilterChains()
 				.getFirst();
@@ -53,6 +56,7 @@ public class SecurityConfigEx01Test {
 	}
 
 	@Test
+	@DisplayName("두번째 SecurityFilterChain에 등록된 Filter의 개수 확인")
 	public void testSecurityFilterChain02() {
 		SecurityFilterChain securityFilterChain = filterChainProxy.getFilterChains()
 				.getLast();
@@ -60,6 +64,7 @@ public class SecurityConfigEx01Test {
 	}
 
 	@Test
+	@DisplayName("/hello/** 경로에 대해 걸린 필터들의 cookie 값 확인")
 	public void testHello() throws Throwable {
 		mvc.perform(get("/hello")).andExpect(status().isOk())
 				.andExpect(cookie().value("SecurityFilterEx01", "Works"))
@@ -67,8 +72,9 @@ public class SecurityConfigEx01Test {
 	}
 	
 	@Test
+	@DisplayName("/ping/** 경로에 대해 걸린 필터들의 cookie 값 확인")
 	public void testPing() throws Throwable {
-		mvc.perform(get("/ping")).andExpect(status().isOk())
+		mvc.perform(get("/ping/anyword")).andExpect(status().isOk())
 				.andExpect(cookie().value("SecurityFilterEx03", "Works"))
 				.andExpect(cookie().value("SecurityFilterEx04", "Works"))
 				.andDo(print());

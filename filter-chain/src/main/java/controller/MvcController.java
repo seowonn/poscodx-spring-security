@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class MvcController {
-    @GetMapping("/hello")
+    @GetMapping("/hello/**")
     public String hello() {
         return "world";
     }
 
-    @GetMapping("/ping")
+    @GetMapping("/ping/**")
     public String ping() {
         return "pong";
     }
