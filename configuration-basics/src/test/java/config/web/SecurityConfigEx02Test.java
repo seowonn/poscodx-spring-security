@@ -41,6 +41,7 @@ public class SecurityConfigEx02Test {
                 .build();
     }
     
+    // "/assets/**", "/**" 경로로 2개가 생성됨
     @Test
 	public void testSecurityFilterChains() {
 		List<SecurityFilterChain> securityFilterChains = filterChainProxy
@@ -55,6 +56,7 @@ public class SecurityConfigEx02Test {
 		assertEquals(0, securityFilterChain.getFilters().size());
 	}
 
+	// Spring Security 5.7 이상 또는 Spring Boot 3.x 이상에서는 필터 개수 10개
 	@Test
 	public void testSecurityFilterChain02() {
 		SecurityFilterChain securityFilterChain = filterChainProxy.getFilterChains()
@@ -65,7 +67,7 @@ public class SecurityConfigEx02Test {
 			System.out.println(filter.getClass().getSimpleName());
 		}
 		
-		assertEquals(16, filters.size());
+		assertEquals(10, filters.size());
 	}
 
 	@Test
