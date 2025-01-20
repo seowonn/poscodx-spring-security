@@ -9,9 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.ContextConfiguration;
@@ -23,7 +23,6 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
 import config.WebConfig;
-import jakarta.servlet.http.HttpServletResponse;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { WebConfig.class, SecurityConfigEx03.class })
@@ -31,8 +30,6 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityConfigEx03Test {
 	private MockMvc mvc;
 	private FilterChainProxy filterChainProxy;
-	@Autowired
-	private HttpServletResponse httpServletResponse;
 
 	@BeforeEach
 	public void setup(WebApplicationContext applicationContext) {
@@ -50,6 +47,7 @@ public class SecurityConfigEx03Test {
 	}
 
 	@Test
+	@DisplayName("/assets/** 에 걸어둔 필터가 없는 경우")
 	public void testSecurityFilterChain01() {
 		SecurityFilterChain securityFilterChain = filterChainProxy.getFilterChains()
 				.getFirst();
@@ -57,6 +55,7 @@ public class SecurityConfigEx03Test {
 	}
 
 	@Test
+	@DisplayName("/** 에 걸어둔 필터가 3개인 경우")
 	public void testSecurityFilterChain02() {
 		SecurityFilterChain securityFilterChain = filterChainProxy.getFilterChains()
 				.getLast();
