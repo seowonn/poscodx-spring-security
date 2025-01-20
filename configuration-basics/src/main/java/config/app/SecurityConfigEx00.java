@@ -67,6 +67,12 @@ public class SecurityConfigEx00 {
         return new SecurityContextPersistenceFilter();
     }
 
+    /**
+     * 3번: SecurityContextHolderFilter
+     * SecurityContext가 없으면 만들어주는 필터
+     * SecurityContext는 Authentication 객체를 보관하는 인터페이스로, SecurityContext를 통해 한 요청에 
+     * 대해서 어떤 필터에서도 같은 Authentication 객체를 사용한다. 
+     */
     @Bean
     public SecurityContextHolderFilter securityContextHolderFilter() {
         return new SecurityContextHolderFilter(new DelegatingSecurityContextRepository(
@@ -75,7 +81,7 @@ public class SecurityConfigEx00 {
         ));
     }
 
-    /*** LogoutFilter **************************************/
+    // 8번: LogoutFilter
     @Bean
     public LogoutFilter logoutFilter() {
         LogoutFilter logoutFilter = new LogoutFilter(logoutSuccessHandler(), logoutHandler());
@@ -94,7 +100,7 @@ public class SecurityConfigEx00 {
         return logoutSuccessHandler;
     }
 
-    // LogoutHandler
+    // LogoutHandler: 로그 아웃 과정에서 세션 무효화, 쿠키 삭제, 인증 정보 제거 등의 작업을 수행
     @Bean
     public LogoutHandler logoutHandler() {
         SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
@@ -112,16 +118,14 @@ public class SecurityConfigEx00 {
         usernamePasswordProcessingFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
         usernamePasswordProcessingFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
 
-        usernamePasswordProcessingFilter.setFilterProcessesUrl("/user/auth");
+        usernamePasswordProcessingFilter.setFilterProcessesUrl("/user/auth"); // 로그인 요청 url 변경
         usernamePasswordProcessingFilter.setUsernameParameter("email");
         usernamePasswordProcessingFilter.setPasswordParameter("password");
 
         return usernamePasswordProcessingFilter;
     }
 
-    //
-    // AuthenticationManager
-    //
+    // AuthenticationManager: 인증 작업을 수행하는 곳
     @Bean
     public AuthenticationManager authenticationManager() {
         return new ProviderManager(authenticationProvider());
@@ -172,7 +176,10 @@ public class SecurityConfigEx00 {
     }
 
 
-    /*** AnonymousAuthenticationFilter **********************/
+    /**
+     * AnonymousAuthenticationFilter
+     * 이 필터에 올 때까지 사용자가 인증되지 않았다면, 해당 요청을 익명의 사용자 요청으로 판단할 수 있다. 
+     */
     @Bean
     public AnonymousAuthenticationFilter anonymousAuthenticationFilter() {
         return new AnonymousAuthenticationFilter("BF93JFJ091N00Q7HF");
